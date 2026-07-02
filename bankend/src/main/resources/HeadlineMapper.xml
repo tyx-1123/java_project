@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.study.Mapper.HeadlineMapper">
+
+    <select id="selectPageMap" resultType="java.util.Map">
+        select
+            nh.hid,
+            nh.title,
+            nh.type,
+            nh.publisher,
+            nh.page_views as pageViews,
+            timestampdiff(hour, nh.create_time, now()) as pastHours
+        from news_headline nh
+        <where>
+            nh.is_deleted = 0
+            <if test="portalVo.keyWords != null and portalVo.keyWords != ''">
+                and nh.title like concat('%', #{portalVo.keyWords}, '%')
+            </if>
+            <if test="portalVo.type != null and portalVo.type != 0">
+                and nh.type = #{portalVo.type}
+            </if>
+        </where>
+        order by nh.create_time desc
+    </select>
+
+    <select id="selectDetailMap" resultType="java.util.Map">
+        select
+            nh.hid,
+            nh.title,
+            nh.article,
+            nh.publisher,
+            nh.page_views as pageViews,
+            nh.version,
+            nt.tname as typeName,
+            timestampdiff(hour, nh.create_time, now()) as pastHours
+        from news_headline nh
+        left join news_type nt on nh.type = nt.tid
+        where nh.is_deleted = 0
+          and nh.hid = #{hid}
+    </select>
+
+    <update id="updatePageViews">
+        update news_headline
+        set page_views = page_views + 1
+        where hid = #{hid}
+          and is_deleted = 0
+    </update>
+
+</mapper>

@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/sm_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: asdfghjkl7890
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis-plus:
+  mapper-locations: classpath:/HeadlineMapper.xml
+
+jwt:
+  token:
+    tokenExpiration: 120
+    tokenSignKey: asdfghjkl7890
